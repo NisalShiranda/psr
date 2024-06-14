@@ -36,7 +36,7 @@ app.get('/users', (req,res) => {
 });
 
 app.post('/createuser', (req,res) => {
-    controller.addUser(req.body,(cb) => {
+    controller.addUser(req.body,() => {
         res.send();
     })
 })
