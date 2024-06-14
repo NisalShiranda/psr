@@ -1,24 +1,35 @@
 import { Box } from '@mui/material';
 import UserForm from './UserForm';
 import UsersTable from './UsersTable'
+import Axios from 'axios';
+import { useState,useEffect } from 'react';
 
-const users =[
-    {
-        id: 1,
-        name: 'John',
-    },
-    {
-        id: 2,
-        name: 'nisal',
-    },
-    {
-        id: 3,
-        name: 'Kavindu',
-    },
 
-];
 
 const Users = () => {
+
+    useEffect(() => {
+        getUsers();
+
+    },[])
+
+    const[users,setUsers] = useState([]);
+
+    const getUsers = () =>{
+        Axios.get('http://localhost:3001/api/users')
+           .then(response => {
+                setUsers(response.data?.response || []);
+        })
+            .catch(error => {
+                console.log("Axios error:", error);
+            })
+    }
+
+   
+
+
+
+
   return (
     <>
         <Box
