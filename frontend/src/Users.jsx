@@ -8,12 +8,17 @@ import { useState,useEffect } from 'react';
 
 const Users = () => {
 
+    const[users,setUsers] = useState([]);
+    const [submitted,setSubmitted] = useState(false);
+    const [selectedUser,setSelectedUser] = useState({});
+    const [isEdit,setIsEdit] = useState(false);
+
     useEffect(() => {
         getUsers();
 
     },[])
 
-    const[users,setUsers] = useState([]);
+    
 
     const getUsers = () =>{
         Axios.get('http://localhost:3001/api/users')
@@ -25,10 +30,60 @@ const Users = () => {
             })
     }
 
-   
+    const addUser = (data) => {
+        setSubmitted(true);
+        const payload = {
+            id: data.id,
+            name: data.name,
+        }
+        Axios.post('http://localhost:3001/api/createuser',payload)
+        .then(() => {
+           getUsers();
+           setSubmitted(false);
+           isEdit(false);
+    })
+        .catch(error => {
+            console.log("Axios error:", error);
+        })
+    };
 
+    const updateUser = (data) => {
 
+        setSubmitted(true);
+        const payload = {
+            id: data.id,
+            name: data.name,
+        }
 
+        Axios.post('http://localhost:3001/api/updateuser',payload)
+        .then(() => {
+           getUsers();
+           setSubmitted(false);
+           isEdit(false);
+    })
+        .catch(error => {
+            console.log("Axios error:", error);
+        })
+
+    }
+
+    const deleteUser = (data) => {
+
+        
+        
+
+        Axios.post('http://localhost:3001/api/deleteuser',data)
+        .then(() => {
+           getUsers();
+           
+          
+    })
+        .catch(error => {
+            console.log("Axios error:", error);
+        })
+
+        
+    };
 
   return (
     <>
@@ -41,8 +96,25 @@ const Users = () => {
         
         
         >
-        <UserForm />
-        <UsersTable rows={users} />
+        <UserForm
+            addUser={addUser}
+            submitted={submitted}
+            data={selectedUser}
+            isEdit={isEdit}
+            updateUser={updateUser}
+        
+         />
+        <UsersTable
+            rows={users}
+            selectedUser={data => {
+                setSelectedUser(data);
+                setIsEdit(true);
+            }}
+            deleteUser={data => {
+                window.confirm('Are you sure you want to delete') && deleteUser(data);
+            }}
+
+          />
         </Box>
        
 
