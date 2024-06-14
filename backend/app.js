@@ -15,17 +15,41 @@ app.use(express.urlencoded({
 
 app.use(express.json());
 
-app.get('/users', (req,res) => {
+// app.get('/users', (req,res) => {
     
-    controller.getUsers(users => {
-        res.send(users);
-    });
+//     controller.getUsers(users => {
+//         res.send(users);
+//     });
+// })
+
+// app.get('/user', (req,res) => {
+//     const id = req.query.id;
+//     controller.getUserById(id, user => {
+//         res.send(user);
+//     })
+// })
+
+app.get('/users', (req,res) => {
+    controller.getUsers((req,res,next) => {
+        res.send();
+    })
+});
+
+app.post('/createuser', (req,res) => {
+    controller.addUser(req.body,(cb) => {
+        res.send();
+    })
 })
 
-app.get('/user', (req,res) => {
-    const id = req.query.id;
-    controller.getUserById(id, user => {
-        res.send(user);
+app.post('/updateuser', (req,res) => {
+    controller.updateUser(req.body,(cb) => {
+        res.send(cb);
+    })
+})
+
+app.post('/deleteuser', (req,res) => {
+    controller.deleteUser(req.body,(cb) => {
+        res.send(cb);
     })
 })
 
